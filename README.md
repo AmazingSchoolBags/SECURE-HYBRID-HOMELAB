@@ -3,41 +3,26 @@
 ## 🎯 Vision du Projet
 Ce laboratoire est une réplique miniature d'une infrastructure d'entreprise. Il me permet de tester des scénarios d'attaque/défense, de gérer des environnements de virtualisation critiques et de maîtriser l'hybridation avec le Cloud Microsoft.
 
----
-
 ## 🏗️ Architecture Réseau & Sécurité
-* **Cœur de réseau :** Firewall **Stormshield SN210** (Filtrage ASQ & IPS).
-* **Accès VPN :** VPN SSL (Port 17433) avec restriction Géo-IP (France) et liste blanche sur l'IP publique de l'entreprise d'alternance.
-* **Segmentation (VLANs) :**
-| VLAN | Nom | Usage |
-| :--- | :--- | :--- |
-| **10** | SIEGE | Administration & Management |
-| **20** | WIFI | Accès sans-fil (Settat) |
-| **30** | INVITE | Accès internet isolé |
-| **40** | USERS | Postes de travail & Terminaux |
-| **50** | LAB | Environnement de test & Machines vulnérables |
+* **Cœur de réseau :** Firewall **Stormshield SN210** assurant le filtrage et l'inspection de flux.
+* **Accès VPN :** VPN SSL sur port personnalisé (**17433**) avec restriction par Géo-IP (France) et filtrage par IP publique source (IP entreprise).
+* **Segmentation :** 5 VLANs isolés (Siège, WiFi, Invités, Users, Lab) gérés via un switch **HP 2620-24** et routage inter-VLAN.
 
 ## 🖥️ Virtualisation & Haute Disponibilité
-* **Hyperviseur :** Cluster de 2 nœuds **Proxmox VE** avec Quorum.
-* **Stockage :** Baie de stockage partagée pour la migration à chaud (vMotion-like) et la HA.
-* **Monitoring :** Serveur physique dédié pour **Proxmox Datacenter Manager** (indépendance vis-à-vis du cluster).
-* **Supervision :** Instance **Zabbix** (VM Ubuntu) surveillant SNMP (Firewall, Switchs) et les ressources systèmes.
+* **Hyperviseur :** Cluster de 2 nœuds **Proxmox VE** avec quorum et stockage partagé pour la **Haute Disponibilité (HA)** des VMs.
+* **Gestion :** Serveur physique dédié pour **Proxmox Datacenter Manager** afin de garantir une visibilité constante.
+* **Services Critiques :**
+    * **Identité :** Windows Server 2025 local synchronisé avec **Azure AD (Entra ID Connect)**.
+    * **Supervision :** Instance **Zabbix** monitorant le SNMP des switchs, le firewall et les ressources serveurs.
 
-## ☁️ Modern Workplace & Cloud (Hybride)
-* **Identité :** Windows Server 2025 local synchronisé avec **Azure AD (Entra ID Connect)**.
-* **Endpoint Management :** Enrôlement hybride (VMs + Physiques) dans **Microsoft Intune**.
-* **Sécurité :** Authentification MFA via **tokens physiques Thales**.
-* **Données :** Migration complète des File Servers locaux vers **SharePoint Online**.
+## ☁️ Modern Workplace & Cloud
+* **Tenant M365 Dev :** Domaine personnalisé (`amen.fr`) avec configuration complète des enregistrements DNS (MX, TXT, SPF).
+* **Endpoint Management :** Enrôlement de machines physiques et virtuelles dans **Microsoft Intune**.
+* **Sécurité Forte :** Déploiement du MFA via **tokens physiques Thales**.
+* **Migration :** Transition réussie de serveurs de fichiers locaux vers **SharePoint Online**.
 
----
+### 🏗️ Architecture du Homelab
 
-## 📊 Schéma d'Architecture
-<img width="2752" height="1536" alt="Schéma Architecture Mohamed CT" src="https://github.com/user-attachments/assets/67231677-9564-4209-92a1-d5dc717eddf5" />
-
-<details>
-<summary>🔎 Cliquez ici pour voir le schéma en mode texte (Logique réseau)</summary>
-
-```text
                                  ┌───────────────┐
                                  │   INTERNET    │
                                  └───────┬───────┘
@@ -71,3 +56,23 @@ Ce laboratoire est une réplique miniature d'une infrastructure d'entreprise. Il
                                            ┌─────┴─────────────┴─────┐
                                            │   STOCKAGE PARTAGÉ HA   │
                                            └─────────────────────────┘
+                                                         │
+                                           ┌─────────────┼─────────────┐
+                                           │  SERVICES CRITIQUES (VMs) │
+                                           ├───────────────────────────┤
+                                           │ 🔹 Windows Server 2025    │
+                                           │ 🔹 Zabbix (Ubuntu Server) │
+                                           │ 🔹 Proxmox Backup Server  │
+                                           └───────────────────────────┘
+
+ ## 📊 Schéma d'Architecture 
+ <img width="2752" height="1536" alt="image" src="https://github.com/user-attachments/assets/67231677-9564-4209-92a1-d5dc717eddf5" />
+
+ ## 🎯 Objectifs Techniques
+- Sécurisation d’infrastructure hybride (On-prem + Azure)
+- Simulation d’attaques (lateral movement, brute force, privilege escalation)
+- Supervision & détection d’anomalies
+- Automatisation & Infrastructure as Code
+- Résilience & reprise après incident
+
+
