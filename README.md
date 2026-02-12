@@ -54,3 +54,11 @@ Ce laboratoire est une réplique miniature d'une infrastructure d'entreprise. Il
  ## 📊 Schéma d'Architecture 2
  <img width="2752" height="1536" alt="image" src="https://github.com/user-attachments/assets/67231677-9564-4209-92a1-d5dc717eddf5" />
 
+ ## 🎯 Objectifs Techniques
+- Sécurisation d’infrastructure hybride (On-prem + Azure)
+- Simulation d’attaques (lateral movement, brute force, privilege escalation)
+- Supervision & détection d’anomalies
+- Automatisation & Infrastructure as Code
+- Résilience & reprise après incident
+
+
