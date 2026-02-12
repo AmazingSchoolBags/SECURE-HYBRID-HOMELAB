@@ -21,7 +21,8 @@ Ce laboratoire est une réplique miniature d'une infrastructure d'entreprise. Il
 * **Sécurité Forte :** Déploiement du MFA via **tokens physiques Thales**.
 * **Migration :** Transition réussie de serveurs de fichiers locaux vers **SharePoint Online**.
 
-## 📊 Schéma d'Architecture
+### 🏗️ Architecture du Homelab
+
                                  ┌───────────────┐
                                  │   INTERNET    │
                                  └───────┬───────┘
@@ -64,7 +65,7 @@ Ce laboratoire est une réplique miniature d'une infrastructure d'entreprise. Il
                                            │ 🔹 Proxmox Backup Server  │
                                            └───────────────────────────┘
 
- ## 📊 Schéma d'Architecture 2
+ ## 📊 Schéma d'Architecture 
  <img width="2752" height="1536" alt="image" src="https://github.com/user-attachments/assets/67231677-9564-4209-92a1-d5dc717eddf5" />
 
  ## 🎯 Objectifs Techniques
