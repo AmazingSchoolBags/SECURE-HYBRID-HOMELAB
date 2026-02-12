@@ -22,34 +22,47 @@ Ce laboratoire est une réplique miniature d'une infrastructure d'entreprise. Il
 * **Migration :** Transition réussie de serveurs de fichiers locaux vers **SharePoint Online**.
 
 ## 📊 Schéma d'Architecture
-[ INTERNET ]
-                           |
-                    [ Box Internet ] (Bridge/DMZ)
-                           | 
-             (Port 17433) [ WAN: 192.168.1.200 ]
-                           |
-                🛡️ [ STORMHIELD SN210 ]
-               /           |           \
- [ VPN SSL ]--/            |            \--[ Filtrage Geo-IP France ]
-                           |             \--[ Restriction IP Entreprise ]
-                           |
-        ___________________|___________________
-       |                                       |
- [ DMZ SERVEURS ] (10.0.1.0/24)          [ LAN AGGREGÉ ] (172.16.0.0/24)
-       |                                       |
-       |-- 🖥️ Proxmox Backup Server         [ SWITCH HP 2620-24 ] (Tagged VLANs)
-       |-- 📊 Proxmox Datacenter Manager       |-- VLAN 10 : SIEGE
-       |-- 🔍 Zabbix (VM Ubuntu)               |-- VLAN 20 : WIFI / SETTAT
-       |-- 🗄️ Stockage Partagé (HA)            |-- VLAN 30 : INVITE
-       |-- 🆔 WSERVER 2025 (Entra ID Sync)     |-- VLAN 40 : USERS
-                                               |-- VLAN 50 : LAB
-       |___________________                    
-       |                   |
- [ NODE PROXMOX 1 ]  [ NODE PROXMOX 2 ]
-       |                   |
- [ VMs & LXC ]       [ VMs & LXC ]
-       |                   |
- [ INTUNE ENROLLED DEVICES (Physical & Virtual) ] <---> [ AZURE / M365 ]
+                                 ┌───────────────┐
+                                 │   INTERNET    │
+                                 └───────┬───────┘
+                                         │
+                                 ┌───────┴───────┐
+                                 │ Box Internet  │ (Mode Bridge/DMZ)
+                                 └───────┬───────┘
+                                         │
+                          WAN IP : 192.168.1.200 (Port 17433)
+                                         │
+                         ┌───────────────┴───────────────┐
+                         │      STORMSHIELD SN210        │
+                         │   (VPN SSL / Géo-IP France)   │
+                         └───────┬───────────────┬───────┘
+                                 │               │
+                 ┌───────────────┘               └───────────────┐
+                 │                                               │
+      [ LAN (Trunk VLANs) ]                            [ DMZ (10.0.1.0/24) ]
+                 │                                               │
+      ┌──────────┴──────────┐                         ┌──────────┴──────────┐
+      │     SWITCH LAN      │                         │     SWITCH DMZ      │
+      │     HP 2620-24      │                         │     HPE 1920S       │
+      └──────────┬──────────┘                         └──────────┬──────────┘
+                 │                                               │
+    ┌──────┬─────┴┬──────┬──────┐                  ┌─────────────┼─────────────┐
+    │      │      │      │      │                  │             │             │
+ VLAN 10 VLAN 20 VLAN 30 VLAN 40 VLAN 50     ┌─────┴─────┐ ┌─────┴─────┐ ┌─────┴─────┐
+ SIEGE   WIFI   INVITE  USERS   LAB        │ NODE PVE 1│ │ NODE PVE 2│ │  PDM (Phy)│
+    │      │      │      │      │          └─────┬─────┘ └─────┬─────┘ └───────────┘
+ Admin  AP/WLC Guests   PCs    VMs               │             │
+                                           ┌─────┴─────────────┴─────┐
+                                           │   STOCKAGE PARTAGÉ HA   │
+                                           └─────────────────────────┘
+                                                         │
+                                           ┌─────────────┼─────────────┐
+                                           │  SERVICES CRITIQUES (VMs) │
+                                           ├───────────────────────────┤
+                                           │ 🔹 Windows Server 2025    │
+                                           │ 🔹 Zabbix (Ubuntu Server) │
+                                           │ 🔹 Proxmox Backup Server  │
+                                           └───────────────────────────┘
 
  ## 📊 Schéma d'Architecture 2
  <img width="2752" height="1536" alt="image" src="https://github.com/user-attachments/assets/67231677-9564-4209-92a1-d5dc717eddf5" />
